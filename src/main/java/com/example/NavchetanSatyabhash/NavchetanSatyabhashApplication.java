@@ -9,5 +9,4 @@ public class NavchetanSatyabhashApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(NavchetanSatyabhashApplication.class, args);
 	}
-
 }
