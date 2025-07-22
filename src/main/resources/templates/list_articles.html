@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>All Articles</title>
+  <style>
+    .preview-img {
+      height: 100px;
+      margin: 4px;
+      object-fit: cover;
+    }
+
+    iframe {
+      margin: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>All Articles</h2>
+
+<a href="/admin/article/form">+ Upload New Article</a>
+<br><br>
+
+<table border="1" cellpadding="10">
+  <thead>
+  <tr>
+    <th>Title</th>
+    <th>Description</th>
+    <th>Category</th>
+    <th>Type</th> <!-- ✅ Added column header -->
+    <th>Views</th>
+    <th>Images</th>
+    <th>Videos</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="article : ${articles}">
+    <td th:text="${article.title}">Title</td>
+    <td th:text="${article.description}">Description</td>
+    <td th:text="${article.category}">Category</td>
+    <td th:text="${article.liveOrVideoOrAd}">Type</td> <!-- ✅ New column value -->
+    <td th:text="${article.views}">Views</td>
+
+    <!-- ✅ Image Preview Section -->
+    <td>
+      <div th:if="${article.images != null}">
+        <img th:each="img : ${article.images}"
+             th:src="@{'/uploads/' + ${img}}" class="preview-img"/>
+      </div>
+      <div th:if="${article.images == null or #lists.isEmpty(article.images)}">
+        No Images
+      </div>
+    </td>
+
+    <!-- ✅ Video Preview Section -->
+    <td>
+      <div th:if="${article.videos != null}">
+        <div th:each="video : ${article.videos}">
+          <iframe th:src="${#strings.contains(video, 'watch?v=')
+                             ? 'https://www.youtube.com/embed/' + #strings.substringAfter(video, 'watch?v=')
+                             : video}"
+                  width="200" height="120" frameborder="0" allowfullscreen>
+          </iframe>
+        </div>
+      </div>
+      <div th:if="${article.videos == null or #lists.isEmpty(article.videos)}">
+        No Videos
+      </div>
+    </td>
+
+    <!-- ✅ Delete Action -->
+    <td>
+      <form th:action="@{'/admin/article/delete/' + ${article.id}}" method="post">
+        <button type="submit">Delete</button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+</body>
+</html>

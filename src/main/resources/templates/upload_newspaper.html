@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Upload Newspaper</title>
+</head>
+<body>
+<h2>Upload Newspaper</h2>
+
+<form th:action="@{/admin/newspaper/save}" method="post" enctype="multipart/form-data">
+  <label>Title:</label><br>
+  <input type="text" name="title" required><br><br>
+
+  <label>PDF File:</label><br>
+  <input type="file" name="file" accept=".pdf" required><br><br>
+
+  <button type="submit">Upload</button>
+</form>
+
+<br>
+<a href="/admin/newspapers">Back to Newspaper List</a>
+</body>
+</html>

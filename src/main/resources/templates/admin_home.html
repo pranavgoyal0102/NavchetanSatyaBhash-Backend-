@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+<h2>Welcome, Admin</h2>
+
+<ul>
+    <li><a href="/admin/articles">Manage Articles</a></li>
+    <li><a href="/admin/article/form">Upload New Article</a></li>
+    <li><a href="/admin/newspapers">Manage Newspapers</a></li>
+    <li><a href="/admin/newspaper/form">Upload New Newspaper</a></li>
+</ul>
+
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Logout</button>
+</form>
+</body>
+</html>

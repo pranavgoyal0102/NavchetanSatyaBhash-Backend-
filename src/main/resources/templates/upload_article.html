@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload Article</title>
+  <style>
+    .preview-img {
+        height: 120px;
+        margin: 5px;
+        border: 1px solid #ccc;
+        object-fit: cover;
+    }
+    .video-input {
+        margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Upload New Article</h2>
+
+<form method="post" action="/admin/article/save" enctype="multipart/form-data">
+  <label>Title:</label><br>
+  <input type="text" name="title" required><br><br>
+
+  <label>Description:</label><br>
+  <textarea name="description" required></textarea><br><br>
+
+  <!-- ✅ Category dropdown -->
+  <label>Category:</label><br>
+  <select name="category" required>
+    <option value="" disabled selected>Select Category</option>
+    <option value="State" th:selected="${article?.category == 'State'}">State</option>
+    <option value="India" th:selected="${article?.category == 'India'}">India</option>
+    <option value="International" th:selected="${article?.category == 'International'}">International</option>
+  </select><br><br>
+
+  <!-- ✅ Mandatory Type Dropdown -->
+  <label>Type:</label><br>
+  <select name="liveOrVideoOrAd" required>
+    <option value="" disabled selected>Select Type</option>
+    <option value="Live" th:selected="${article?.liveOrVideoOrAd == 'Live'}">Live</option>
+    <option value="Advertisement" th:selected="${article?.liveOrVideoOrAd == 'Advertisement'}">Advertisement</option>
+    <option value="Article" th:selected="${article?.liveOrVideoOrAd == 'Article'}">Article</option>
+  </select><br><br>
+
+
+  <!-- ✅ Multiple Video Links -->
+  <label>Video Links (Optional):</label><br>
+  <div id="videoLinksContainer">
+    <input type="url" name="videoUrls" placeholder="https://example.com/video.mp4" class="video-input">
+  </div>
+  <button type="button" onclick="addVideoInput()">+ Add More</button><br><br>
+
+  <label>Select Images:</label><br>
+  <input type="file" id="imageInput" name="images" multiple accept="image/*"><br><br>
+
+  <div id="previewContainer"></div><br>
+
+  <button type="submit">Upload</button>
+</form>
+
+<a href="/admin/articles">← Back to Article List</a>
+
+<script>
+  document.getElementById("imageInput").addEventListener("change", function () {
+    const previewContainer = document.getElementById("previewContainer");
+    previewContainer.innerHTML = "";
+
+    const files = this.files;
+    if (files) {
+      Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const img = document.createElement("img");
+          img.src = e.target.result;
+          img.className = "preview-img";
+          previewContainer.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  });
+
+  function addVideoInput() {
+    const container = document.getElementById("videoLinksContainer");
+    const input = document.createElement("input");
+    input.type = "url";
+    input.name = "videoUrls";
+    input.placeholder = "https://example.com/video.mp4";
+    input.className = "video-input";
+    container.appendChild(input);
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>All Newspapers</title>
+</head>
+<body>
+<h2>All Newspapers</h2>
+
+<a href="/admin/newspaper/form">+ Upload New Newspaper</a>
+<br><br>
+
+<table border="1" cellpadding="10">
+  <thead>
+  <tr>
+    <th>Title</th>
+    <th>Date</th>
+    <th>Views</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="paper : ${newspapers}">
+    <td th:text="${paper.title}">Title</td>
+    <td th:text="${#temporals.format(paper.date, 'yyyy-MM-dd HH:mm')}">Date</td>
+    <td th:text="${paper.views}">Views</td>
+    <td>
+      <form th:action="@{'/admin/newspaper/delete/' + ${paper.id}}" method="post">
+        <button type="submit">Delete</button>
+      </form>
+    </td>
+  </tr>
+
+  </tbody>
+</table>
+
+</body>
+</html>
