@@ -1,3 +1,4 @@
+<!-- upload_article.html -->
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -19,6 +20,9 @@
 
 <h2>Upload New Article</h2>
 
+<!-- 🛠 Error message block -->
+<p th:if="${error}" style="color:red;" th:text="${error}"></p>
+
 <form method="post" action="/admin/article/save" enctype="multipart/form-data">
   <label>Title:</label><br>
   <input type="text" name="title" required><br><br>
@@ -26,26 +30,22 @@
   <label>Description:</label><br>
   <textarea name="description" required></textarea><br><br>
 
-  <!-- ✅ Category dropdown -->
   <label>Category:</label><br>
   <select name="category" required>
     <option value="" disabled selected>Select Category</option>
-    <option value="State" th:selected="${article?.category == 'State'}">State</option>
-    <option value="India" th:selected="${article?.category == 'India'}">India</option>
-    <option value="International" th:selected="${article?.category == 'International'}">International</option>
+    <option value="State">State</option>
+    <option value="India">India</option>
+    <option value="International">International</option>
   </select><br><br>
 
-  <!-- ✅ Mandatory Type Dropdown -->
   <label>Type:</label><br>
   <select name="liveOrVideoOrAd" required>
     <option value="" disabled selected>Select Type</option>
-    <option value="Live" th:selected="${article?.liveOrVideoOrAd == 'Live'}">Live</option>
-    <option value="Advertisement" th:selected="${article?.liveOrVideoOrAd == 'Advertisement'}">Advertisement</option>
-    <option value="Article" th:selected="${article?.liveOrVideoOrAd == 'Article'}">Article</option>
+    <option value="Live">Live</option>
+    <option value="Advertisement">Advertisement</option>
+    <option value="Article">Article</option>
   </select><br><br>
 
-
-  <!-- ✅ Multiple Video Links -->
   <label>Video Links (Optional):</label><br>
   <div id="videoLinksContainer">
     <input type="url" name="videoUrls" placeholder="https://example.com/video.mp4" class="video-input">
@@ -66,20 +66,16 @@
   document.getElementById("imageInput").addEventListener("change", function () {
     const previewContainer = document.getElementById("previewContainer");
     previewContainer.innerHTML = "";
-
-    const files = this.files;
-    if (files) {
-      Array.from(files).forEach(file => {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          const img = document.createElement("img");
-          img.src = e.target.result;
-          img.className = "preview-img";
-          previewContainer.appendChild(img);
-        };
-        reader.readAsDataURL(file);
-      });
-    }
+    Array.from(this.files).forEach(file => {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const img = document.createElement("img");
+        img.src = e.target.result;
+        img.className = "preview-img";
+        previewContainer.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    });
   });
 
   function addVideoInput() {

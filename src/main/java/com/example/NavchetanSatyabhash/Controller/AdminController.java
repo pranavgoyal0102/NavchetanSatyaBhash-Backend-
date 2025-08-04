@@ -51,12 +51,16 @@ public class AdminController {
     }
 
     @PostMapping("/article/save")
-    public String saveArticle(@RequestParam String title,
-                              @RequestParam String description,
-                              @RequestParam String category,
-                              @RequestParam String liveOrVideoOrAd,
-                              @RequestParam(value = "images", required = false) MultipartFile[] imageFiles,
-                              @RequestParam(value = "videoUrls", required = false) List<String> videoUrls) {
+    public String saveArticle(
+            @RequestParam String title,
+            @RequestParam String description,
+            @RequestParam String category,
+            @RequestParam String liveOrVideoOrAd,
+            @RequestParam(value = "images", required = false) MultipartFile[] imageFiles,
+            @RequestParam(value = "videoUrls", required = false) List<String> videoUrls,
+            HttpServletRequest request,
+            Model model
+    ) {
         try {
             Article article = new Article();
             article.setTitle(title);
@@ -89,9 +93,11 @@ public class AdminController {
             return "redirect:/admin/articles";
         } catch (Exception e) {
             e.printStackTrace();
-            return "redirect:/admin/article/form";
+            model.addAttribute("error", "Upload failed: " + e.getMessage());
+            return "upload_article";
         }
     }
+
 
 
 
@@ -119,16 +125,16 @@ public class AdminController {
     @PostMapping("/newspaper/save")
     public String saveNewspaper(@RequestParam String title,
                                 @RequestParam("file") MultipartFile file,
-                                HttpServletRequest request) {
+                                HttpServletRequest request,
+                                Model model) {
         try {
-            // Compress and store in GridFS
             byte[] compressedPdf = PdfCompressor.compressPdf(file.getInputStream());
             ByteArrayInputStream inputStream = new ByteArrayInputStream(compressedPdf);
 
             ObjectId fileId = gridFsTemplate.store(inputStream, file.getOriginalFilename(), "application/pdf");
 
-            String baseUrl = request.getScheme() + "://" + request.getServerName() + "/newspaper" ;
-            String pdfUrl = baseUrl + "/pdf/" + fileId.toHexString();
+            String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+            String pdfUrl = baseUrl + "/newspaper/pdf/" + fileId.toHexString();
 
             NewsPaper newsPaper = new NewsPaper();
             newsPaper.setTitle(title);
@@ -140,9 +146,11 @@ public class AdminController {
             return "redirect:/admin/newspapers";
         } catch (Exception e) {
             e.printStackTrace();
-            return "redirect:/admin/newspaper/form";
+            model.addAttribute("error", "PDF upload failed: " + e.getMessage());
+            return "upload_newspaper";
         }
     }
+
     @GetMapping("/newspapers")
     public String showAllNewspapers(Model model) {
         List<NewsPaper> newspapers = newsPaperService.getAllPaper();

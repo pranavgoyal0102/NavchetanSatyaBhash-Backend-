@@ -43,15 +43,19 @@
     <td th:text="${article.views}">Views</td>
 
     <!-- ✅ Image Preview Section -->
+    <!-- list_articles.html -->
+    ...
     <td>
       <div th:if="${article.images != null}">
         <img th:each="img : ${article.images}"
-             th:src="@{'/uploads/' + ${img}}" class="preview-img"/>
+             th:src="'data:image/jpeg;base64,' + ${img}" class="preview-img"/>
       </div>
       <div th:if="${article.images == null or #lists.isEmpty(article.images)}">
         No Images
       </div>
     </td>
+    ...
+
 
     <!-- ✅ Video Preview Section -->
     <td>
