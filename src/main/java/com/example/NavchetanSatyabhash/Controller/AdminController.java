@@ -127,7 +127,6 @@ public class AdminController {
 
             ObjectId fileId = gridFsTemplate.store(inputStream, file.getOriginalFilename(), "application/pdf");
 
-            // Construct file access URL
             String baseUrl = request.getScheme() + "://" + request.getServerName() + "/newspaper" ;
             String pdfUrl = baseUrl + "/pdf/" + fileId.toHexString();
 
